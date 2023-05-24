@@ -1,5 +1,17 @@
 #include "monty.h"
 
+/**
+ * add - It adds top 2 stack elements.
+ * @stack: A double pointer to top of stack.
+ * @line_number: The line no being executed.
+ *
+ * Description: If elements less than 2,
+ * an error message is printed.
+ *
+ * Return: Nothing.
+ */
+
+
 void add(stack_t **stack, unsigned int line_number)
 {
 	stack_t *top1;

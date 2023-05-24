@@ -1,6 +1,12 @@
 #include "monty.h"
 
-stack_t *stack = NULL;
+/**
+ * main - The main entry point
+ * @argc: Argument count.
+ * @argv: Argument values array
+ *
+ * Return: 0 On success.
+ */
 
 int main(int argc, char *argv[])
 {
@@ -9,6 +15,8 @@ int main(int argc, char *argv[])
     unsigned int line_number = 0;
     char *opcode;
     char *read;
+
+    stack_t *stack = NULL;
 
     if (argc != 2)
     {

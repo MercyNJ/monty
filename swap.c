@@ -1,5 +1,16 @@
 #include "monty.h"
 
+/**
+ * swap - Swaps stack's top 2 elements.
+ * @stack: Stack's top double pointer.
+ * @line_number: Line num to be executed.
+ *
+ * Description: Necessary pointers are updated,
+ * to maintain data structure.
+ *
+ * Return: Nothing.
+ */
+
 void swap(stack_t **stack, unsigned int line_number)
 {
 	stack_t *top1;
