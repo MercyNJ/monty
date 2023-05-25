@@ -5,6 +5,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <sys/types.h>
+#include <fcntl.h>
+#include <ctype.h>
+#include <stddef.h>
 
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
@@ -37,15 +41,48 @@ typedef struct instruction_s
         void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
-extern stack_t *stack;
+/**
+* struct montyState_s - variables -args, file, line content
+* @arg: Argument count value
+* @file: pointer to monty file
+* @content: line content
+* @stack_mode: flag change stack to queue or viceversa.
+*
+* Description: carries values through the program
+*/
+typedef struct montyState_s
+{
+        char *arg;
+        FILE *file;
+        char *content;
+        int stack_mode;
+}  montyState_t;
+extern montyState_t montyState;
 
-void push(stack_t **stack, unsigned int line_number);
-void pall(stack_t **stack);
-void pint(stack_t **stack, unsigned int line_number);
-void pop(stack_t **stack, unsigned int line_number);
-void swap(stack_t **stack, unsigned int line_number);
-void add(stack_t **stack, unsigned int line_number);
-void nop(stack_t **stack, unsigned int line_number);
-
+ssize_t getline(char **lineptr, size_t *n, FILE *stream);
+char *_realloc(char *ptr, unsigned int old_size, unsigned int new_size);
+ssize_t getstdin(char **lineptr, int file);
+char  *clean_line(char *content);
+void perform_push(stack_t **head, unsigned int number);
+void perform_pall(stack_t **head, unsigned int number);
+void perform_pint(stack_t **head, unsigned int number);
+int execute(char *content, stack_t **head, unsigned int count, FILE *file);
+void free_stack(stack_t *head);
+void perform_pop(stack_t **head, unsigned int count);
+void perform_swap(stack_t **head, unsigned int count);
+void perform_add(stack_t **head, unsigned int count);
+void perform_nop(stack_t **head, unsigned int count);
+void perform_sub(stack_t **head, unsigned int count);
+void perform_div(stack_t **head, unsigned int count);
+void perform_mul(stack_t **head, unsigned int count);
+void perform_mod(stack_t **head, unsigned int count);
+void perform_pchar(stack_t **head, unsigned int count);
+void perform_pstr(stack_t **head, unsigned int count);
+void perform_rotl(stack_t **head, unsigned int count);
+void perform_rotr(stack_t **head, __attribute__((unused)) unsigned int count);
+void addnode(stack_t **head, int n);
+void add_to_queue(stack_t **head, int n);
+void perform_queue(stack_t **head, unsigned int count);
+void perform_stack(stack_t **head, unsigned int count);
 
 #endif

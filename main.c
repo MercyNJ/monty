@@ -1,67 +1,51 @@
 #include "monty.h"
+#include <stdio.h>
+#define _GNU_SOURCE
+#include <stdlib.h>
+
+montyState_t montyState = {NULL, NULL, NULL, 0};
 
 /**
- * main - The main entry point
- * @argc: Argument count.
- * @argv: Argument values array
- *
- * Return: 0 On success.
- */
-
+* main - Entry for monty code interpreter
+* @argc: argument count
+* @argv: argument value
+*
+* Return: 0 on success
+*/
 int main(int argc, char *argv[])
 {
-    FILE *file;
-    char line[1024];
-    unsigned int line_number = 0;
-    char *opcode;
-    char *read;
+        char *content;
+        FILE *file;
+        size_t size = 0;
+        ssize_t read_line = 1;
+        stack_t *stack = NULL;
+        unsigned int count = 0;
 
-    stack_t *stack = NULL;
-
-    if (argc != 2)
-    {
-        fprintf(stderr, "USAGE: monty file\n");
-        return EXIT_FAILURE;
-    }
-
-    file = fopen(argv[1], "r");
-    if (file == NULL)
-    {
-        fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
-        return EXIT_FAILURE;
-    }
-
-    while ((read = fgets(line, sizeof(line), file)) != NULL)
-    {
-        line_number++;
-
-        opcode = strtok(line, " \t\n");
-
-        if (opcode != NULL && opcode[0] != '#')
+        if (argc != 2)
         {
-            if (strcmp(opcode, "push") == 0)
-                push(&stack, line_number);
-            else if (strcmp(opcode, "pall") == 0)
-                pall(&stack);
-            else if (strcmp(opcode, "pint") == 0)
-                pint(&stack, line_number);
-            else if (strcmp(opcode, "pop") == 0)
-                pop(&stack, line_number);
-            else if (strcmp(opcode, "swap") == 0)
-                swap(&stack, line_number);
-            else if (strcmp(opcode, "add") == 0)
-                add(&stack, line_number);
-            else if (strcmp(opcode, "nop") == 0)
-                nop(&stack, line_number);
-            else
-            {
-                fprintf(stderr, "L%u: unknown instruction %s\n", line_number, opcode);
+                fprintf(stderr, "USAGE: monty file\n");
                 exit(EXIT_FAILURE);
-            }
         }
-    }
-
-    fclose(file);
-
-    return EXIT_SUCCESS;
+        file = fopen(argv[1], "r");
+        montyState.file = file;
+        if (!file)
+        {
+                fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
+                exit(EXIT_FAILURE);
+        }
+        while (read_line > 0)
+        {
+                content = NULL;
+                read_line = getline(&content, &size, file);
+                montyState.content = content;
+                count++;
+                if (read_line > 0)
+                {
+                        execute(content, &stack, count, file);
+                }
+                free(content);
+		 }
+        free_stack(stack);
+        fclose(file);
+return (0);
 }

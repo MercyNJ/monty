@@ -1,43 +1,39 @@
 #include "monty.h"
 
 /**
- * push - Pushes an element to stack's top.
- * @stack: A double pointer to stack's top.
- * @line_number: Line num to be executed.
- *
- * Description: New element is dynamically allocated,
- * stack updated to point to newest element.
- *
- * Return: Nothing.
- */
-
-void push(stack_t **stack, unsigned int line_number)
+* perform_push - Adds node to the stack
+* @head: double head pointer to the stack
+* @count: line count
+*
+* Return: nothing
+*/
+void perform_push(stack_t **head, unsigned int count)
 {
-    char *token;
-    int value;
-    stack_t *newNode;
+        int i, m = 0, flag = 0;
 
-    token = strtok(NULL, " \t\n");
-    if (token == NULL)
-    {
-        fprintf(stderr, "L%u: usage: push integer\n", line_number);
-        exit(EXIT_FAILURE);
-    }
-
-    value = atoi(token);
-
-    newNode = malloc(sizeof(stack_t));
-    if (newNode == NULL)
-    {
-        fprintf(stderr, "Error: malloc failed\n");
-        exit(EXIT_FAILURE);
-    }
-    newNode->n = value;
-    newNode->prev = NULL;
-    newNode->next = *stack;
-
-    if (*stack != NULL)
-        (*stack)->prev = newNode;
-
-    *stack = newNode;
+        if (montyState.arg)
+        {
+                if (montyState.arg[0] == '-')
+                        m++;
+                for (; montyState.arg[m] != '\0'; m++)
+                {
+                        if (montyState.arg[m] > 57 || montyState.arg[m] < 48)
+                                flag = 1; }
+                if (flag == 1)
+                { fprintf(stderr, "L%d: usage: push integer\n", count);
+                        fclose(montyState.file);
+                        free(montyState.content);
+                        free_stack(*head);
+                        exit(EXIT_FAILURE); }}
+        else
+        { fprintf(stderr, "L%d: usage: push integer\n", count);
+                fclose(montyState.file);
+                free(montyState.content);
+                free_stack(*head);
+                exit(EXIT_FAILURE); }
+        i = atoi(montyState.arg);
+        if (montyState.stack_mode == 0)
+                addnode(head, i);
+        else
+                add_to_queue(head, i);
 }
